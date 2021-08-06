@@ -1,0 +1,8 @@
+@import "abstracts/variables";
+.label-file {
+  display: inline-block;
+  color: $main-color;
+  padding: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+}

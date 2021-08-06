@@ -1,0 +1,48 @@
+@import "abstracts/variables";
+.presentation-container {
+  & .left-panel-container {
+    overflow: auto;
+    & h1 {
+      color: $seconday-color;
+      margin-left: 16px;
+      font-family: $font-avenir-family;
+      font-weight: 700;
+    }
+    & .module-container {
+      margin-top: 64px !important ;
+
+      & .header {
+        & h2,
+        & p {
+          color: $color-3;
+        }
+        & h2 {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 4px;
+        }
+        & p {
+          opacity: 0.5;
+        }
+      }
+
+      & .form-container {
+        width: 100%;
+        margin-top: 64px !important;
+        & .field {
+          margin-bottom: 24px !important;
+        }
+        & .submit-btn {
+          background: $main-color;
+          color: #fff;
+          padding: 12px 0 !important;
+          width: 100% !important;
+        }
+      }
+    }
+  }
+  & .right-panel-container {
+    background: url("../../assets/images/SidePanelPresentation.png") no-repeat;
+    background-size: cover;
+  }
+}

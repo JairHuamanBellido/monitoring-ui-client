@@ -1,0 +1,12 @@
+@import "abstracts/variables";
+.login-page-container {
+  & .register-label {
+    color: $color-3;
+    & span a {
+      margin-left: 4px;
+      color: $main-color;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  }
+}
