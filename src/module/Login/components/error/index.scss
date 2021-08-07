@@ -1,0 +1,8 @@
+@import "abstracts/variables";
+.error-container-auth {
+  background: $error-bg-container;
+  & p {
+    color: $error-color;
+    font-weight: 500;
+  }
+}
