@@ -1,19 +1,14 @@
+import { UserRole } from "core/enums/UserRoleEnum";
 import { useState } from "react";
+import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
-import { Flex, InputFile, Input, Button } from "../../shared";
+import { Flex, InputFile, Input, Button, PulseLoader } from "../../shared";
+import SuccessRegisterComponent from "./components/Sucess/SuccessRegisterComponent";
 import "./index.scss";
+import { RegisterRequest } from "./models/RegisterRequest";
+import { RegisterService } from "./service/RegisterService";
 const ULR_AVATAR_DEFAULT =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRknowz3EhhUsGeb5FIpooL9gQWU6OyZPOW7sptvk4ZFpUz4yQflZl-B0jYDeMf_G-alE&usqp=CAU";
-
-interface RegisterRequest {
-  name: string;
-  lastname: string;
-  age: string;
-  dni: string;
-  email: string;
-  username: string;
-  password: string;
-}
 
 export default function RegisterPage() {
   const [imgUrl, setImgUrl] = useState<string>(ULR_AVATAR_DEFAULT);
@@ -25,7 +20,12 @@ export default function RegisterPage() {
     name: "",
     password: "",
     username: "",
+    file: {} as File,
+    rol: UserRole.USER,
   });
+  
+
+  const mutation = useMutation(() => RegisterService.register(payload));
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,16 +35,24 @@ export default function RegisterPage() {
   const handleImange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const picture = e.target.files[0];
+      setPayload({ ...payload, file: picture });
       setImgUrl(URL.createObjectURL(picture));
     }
   };
+
+  const onSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutation.mutate();
+  };
+
+  if(mutation.isSuccess) return <SuccessRegisterComponent />;
   return (
     <div className="register-container">
       <div className="header">
         <h2>Regístrate</h2>
         <p>Completa todos los campos y únete</p>
       </div>
-      <form className="form-container">
+      <form onSubmit={onSubmit} className="form-container">
         <Flex className="image-avatar-container" alignItems="center">
           <img width={48} height={48} src={imgUrl} alt="" />
           <InputFile onChange={handleImange} />
@@ -126,11 +134,20 @@ export default function RegisterPage() {
             required={true}
           />
         </Flex>
-        <Button text="Registrarse" className="submit-btn" />
+        {mutation.isLoading && (
+          <Flex width="100%" justifyContent="center">
+            <PulseLoader />
+          </Flex>
+        )}
+        {!mutation.isLoading && (
+          <Button text="Registrarse" className="submit-btn" />
+        )}
+      </form>
+      {!mutation.isLoading && (
         <p className="label-login">
           <Link to="/login">Regresar al inicio</Link>
         </p>
-      </form>
+      )}
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function PresentationPage() {
           <Logo />
           <h1>Aprix</h1>
         </Flex>
-        <Flex className="module-container">
+        <Flex width="100%" className="module-container">
           <PresentationRouter />
         </Flex>
       </Flex>

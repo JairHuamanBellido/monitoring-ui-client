@@ -11,6 +11,7 @@ export default function InputFile(props: IProps) {
         type="file"
         id="filename"
         name="filename"
+        required={true}
         hidden
       />
       <label className="label-file rounded" htmlFor="filename">
