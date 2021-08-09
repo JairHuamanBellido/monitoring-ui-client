@@ -11,6 +11,9 @@
 # production
 /build
 
+# vs code
+.vscode 
+
 .env
 
 # misc
