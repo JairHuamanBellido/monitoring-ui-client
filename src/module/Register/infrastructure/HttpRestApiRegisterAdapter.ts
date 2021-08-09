@@ -1,8 +1,11 @@
 import HttpRestApi from "core/api/HttRestApi";
-import { RegisterRequest } from "../models/RegisterRequest";
+import { WriteResourceUseCase } from "core/usecase/WriteResourceUseCase";
+import { RegisterUserPort } from "../domain/port/RegisterUserPort";
 
-export class RegisterService {
-  public static async register(payload: RegisterRequest): Promise<void> {
+export class HttpRestApiRegisterAdapter {
+  public static async register(
+    payload: RegisterUserPort
+  ): Promise<WriteResourceUseCase> {
     const formData = new FormData();
 
     formData.append("file", payload.file);
@@ -15,6 +18,11 @@ export class RegisterService {
     formData.append("username", payload.username);
     formData.append("password", payload.password);
 
-    await HttpRestApi.post("/users", formData);
+    const { data } = await HttpRestApi.post<WriteResourceUseCase>(
+      "/users",
+      formData
+    );
+
+    return data;
   }
 }

@@ -4,4 +4,6 @@ import Flex from "./Flex/Flex";
 import Logo from "./Image/Logo";
 import InputFile from "./InputFile/InputFile";
 import PulseLoader from "./Loader/PulseLoader";
-export { Input, Flex, Button, Logo, InputFile, PulseLoader };
+import ContainerError from "./Error/ContainerError";
+
+export { Input, Flex, Button, Logo, InputFile, PulseLoader, ContainerError };

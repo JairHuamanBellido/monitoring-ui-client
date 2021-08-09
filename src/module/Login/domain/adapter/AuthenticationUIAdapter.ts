@@ -1,4 +1,4 @@
-export interface AuthRequest{ 
+export interface AuthenticationUIAdapter{ 
     username: string;
     password: string;
 }

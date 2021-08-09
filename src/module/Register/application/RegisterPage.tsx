@@ -1,18 +1,20 @@
-import { UserRole } from "core/enums/UserRoleEnum";
+import { HttpError } from "core/types/HttpError";
+import { WriteResourceUseCase } from "core/usecase/WriteResourceUseCase";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
-import { Flex, InputFile, Input, Button, PulseLoader } from "../../shared";
+import { Button, Flex, Input, InputFile, PulseLoader } from "shared";
+import { RegisterUserUseCase } from "../domain/usecase/RegisterUserUseCase";
 import SuccessRegisterComponent from "./components/Sucess/SuccessRegisterComponent";
+
 import "./index.scss";
-import { RegisterRequest } from "./models/RegisterRequest";
-import { RegisterService } from "./service/RegisterService";
+
 const ULR_AVATAR_DEFAULT =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRknowz3EhhUsGeb5FIpooL9gQWU6OyZPOW7sptvk4ZFpUz4yQflZl-B0jYDeMf_G-alE&usqp=CAU";
 
 export default function RegisterPage() {
   const [imgUrl, setImgUrl] = useState<string>(ULR_AVATAR_DEFAULT);
-  const [payload, setPayload] = useState<RegisterRequest>({
+  const [payload, setPayload] = useState({
     age: "",
     dni: "",
     email: "",
@@ -21,11 +23,11 @@ export default function RegisterPage() {
     password: "",
     username: "",
     file: {} as File,
-    rol: UserRole.USER,
   });
-  
 
-  const mutation = useMutation(() => RegisterService.register(payload));
+  const mutation = useMutation<WriteResourceUseCase, HttpError>(() =>
+    RegisterUserUseCase.execute(payload)
+  );
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,7 +47,7 @@ export default function RegisterPage() {
     mutation.mutate();
   };
 
-  if(mutation.isSuccess) return <SuccessRegisterComponent />;
+  if (mutation.isSuccess) return <SuccessRegisterComponent />;
   return (
     <div className="register-container">
       <div className="header">

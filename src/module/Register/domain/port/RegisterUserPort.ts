@@ -1,13 +1,13 @@
 import { UserRole } from "core/enums/UserRoleEnum";
 
-export interface RegisterRequest {
-  file: File;
-  name: string;
+export interface RegisterUserPort {
   age: string;
   dni: string;
   email: string;
   lastname: string;
-  rol: UserRole;
-  username: string;
+  name: string;
   password: string;
+  username: string;
+  file: File;
+  rol: UserRole;
 }

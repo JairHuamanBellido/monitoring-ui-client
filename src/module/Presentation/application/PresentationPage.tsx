@@ -1,5 +1,5 @@
-import PresentationRouter from "../../Router/PresentationRouter";
-import { Flex, Logo } from "../../shared";
+import PresentationRouter from "Router/PresentationRouter";
+import { Flex, Logo } from "shared";
 import "./index.scss";
 
 export default function PresentationPage() {

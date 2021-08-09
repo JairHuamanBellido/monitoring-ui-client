@@ -1,14 +1,13 @@
-import { Flex } from "shared";
-import "./index.scss"
+import Flex from "shared/Flex/Flex";
 interface IProps {
   message: string;
 }
-export default function AuthRequestErrorComponent(props: IProps) {
+export default function ContainerError(props: IProps) {
   return (
     <Flex
       width="100%"
       padding="16px"
-      className="error-container-auth rounded"
+      className="container-error rounded"
       margin="24px 0px"
       justifyContent="center"
     >
