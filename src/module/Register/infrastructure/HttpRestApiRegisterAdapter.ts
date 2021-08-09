@@ -1,4 +1,4 @@
-import HttpRestApi from "core/api/HttRestApi";
+import {HttpRestApi} from "core/api/HttRestApi";
 import { WriteResourceUseCase } from "core/usecase/WriteResourceUseCase";
 import { RegisterUserPort } from "../domain/port/RegisterUserPort";
 

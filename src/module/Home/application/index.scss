@@ -1,0 +1,20 @@
+@import "abstracts/variables";
+
+.home-container {
+  & img {
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    -webkit-border-radius: 64px;
+    -moz-border-radius: 64px;
+    -ms-border-radius: 64px;
+    -o-border-radius: 64px;
+    margin-bottom: 24px;
+  }
+  & p {
+    color: $color-3;
+    opacity: 0.8;
+    margin-top: 8px;
+    font-size: 16px;
+  }
+}

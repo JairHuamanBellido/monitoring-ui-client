@@ -5,10 +5,10 @@ import { Redirect, Route, Switch } from "react-router-dom";
 export default function PresentationRouter() {
   return (
     <Switch>
-      <Route exact={true} path="/">
+      <Route exact={true}  path="/">
         <Redirect to="/login" />
       </Route>
-      <Route path="/register">
+      <Route exact={true} path="/register">
         <RegisterPage />
       </Route>
       <Route exact={true} path="/login">

@@ -2,7 +2,7 @@ import { HttpErrorMessageUIAdapter } from "core/adapter/HttpErrorMessageAdapter"
 import { HttpError } from "core/types/HttpError";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Button, ContainerError, Flex, Input, PulseLoader } from "shared";
 import { AuthenticationUseCase } from "../domain/usecase/AuthenticationUseCase";
 import { AuthenticationResponseUseCaseDto } from "../domain/usecase/dto/AuthenticationResponseUseCaseDto";
@@ -35,6 +35,7 @@ export default function LoginPage() {
     mutation.mutate();
   };
 
+  if(mutation.isSuccess) return <Redirect to="/home" />
   return (
     <div className="login-page-container">
       <div className="header">

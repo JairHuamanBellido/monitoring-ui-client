@@ -1,4 +1,4 @@
-import HttpRestApi from "core/api/HttRestApi";
+import {HttpRestApi} from "core/api/HttRestApi";
 import { AuthenticationPort } from "../domain/port/AuthenticationPort";
 import { AuthenticationResponseUseCaseDto } from "../domain/usecase/dto/AuthenticationResponseUseCaseDto";
 
