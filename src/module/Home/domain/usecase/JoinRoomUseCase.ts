@@ -6,7 +6,7 @@ import { JoinRoomPort } from "../port/JoinRoomPort";
 export class JoinRoomUseCase {
   public static join(socket: Socket): void {
     const port: JoinRoomPort = {
-      payload:  parseInt(LocalStorageAdapter.id as string),
+      payload:  parseInt(LocalStorageAdapter.getId()),
       room:     "clientJoinRoom",
       socket:   socket,
     };

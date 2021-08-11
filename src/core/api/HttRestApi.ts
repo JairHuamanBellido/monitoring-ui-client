@@ -12,7 +12,7 @@ const HttRestApiWithInterceptor = axios.create({
 
 HttRestApiWithInterceptor.interceptors.request.use(
   (request: AxiosRequestConfig) => {
-    request.headers.Authorization = `Bearer ${LocalStorageAdapter.token}`;
+    request.headers.Authorization = `Bearer ${LocalStorageAdapter.getToken()}`;
     return request;
   }
 );
