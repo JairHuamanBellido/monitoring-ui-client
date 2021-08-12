@@ -1,11 +1,8 @@
-import { HttpError } from "core/types/HttpError";
-import { WriteResourceUseCase } from "core/usecase/WriteResourceUseCase";
 import { useState } from "react";
-import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { Button, Flex, Input, InputFile, PulseLoader } from "shared";
-import { RegisterUserUseCase } from "../domain/usecase/RegisterUserUseCase";
 import SuccessRegisterComponent from "./components/Sucess/SuccessRegisterComponent";
+import useRegister  from "./hooks/useRegister";
 
 import "./index.scss";
 
@@ -25,9 +22,7 @@ export default function RegisterPage() {
     file: {} as File,
   });
 
-  const mutation = useMutation<WriteResourceUseCase, HttpError>(() =>
-    RegisterUserUseCase.execute(payload)
-  );
+  const mutation = useRegister(payload);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

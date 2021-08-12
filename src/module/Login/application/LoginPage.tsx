@@ -1,11 +1,7 @@
-import { HttpErrorMessageUIAdapter } from "core/adapter/HttpErrorMessageAdapter";
-import { HttpError } from "core/types/HttpError";
 import React, { useState } from "react";
-import { useMutation } from "react-query";
 import { Link, Redirect } from "react-router-dom";
 import { Button, ContainerError, Flex, Input, PulseLoader } from "shared";
-import { AuthenticationUseCase } from "../domain/usecase/AuthenticationUseCase";
-import { AuthenticationResponseUseCaseDto } from "../domain/usecase/dto/AuthenticationResponseUseCaseDto";
+import useAuthentication from "./hooks/useAuthentication";
 import "./index.scss";
 
 export default function LoginPage() {
@@ -14,16 +10,7 @@ export default function LoginPage() {
     password: "",
   });
 
-  const [errMsg, setErrMsg] = useState<string>("");
-
-  const mutation = useMutation<AuthenticationResponseUseCaseDto, HttpError>(
-    () => AuthenticationUseCase.execute(formPayload),
-    {
-      onError: (error) => {
-        setErrMsg(HttpErrorMessageUIAdapter.parse(error.response?.data.type));
-      },
-    }
-  );
+  const mutation = useAuthentication(formPayload);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,7 +22,7 @@ export default function LoginPage() {
     mutation.mutate();
   };
 
-  if(mutation.isSuccess) return <Redirect to="/home" />
+  if (mutation.isSuccess) return <Redirect to="/home" />;
   return (
     <div className="login-page-container">
       <div className="header">
@@ -65,7 +52,9 @@ export default function LoginPage() {
             required={true}
           />
         </Flex>
-        {mutation.isError && <ContainerError message={errMsg} />}
+        {mutation.isError && (
+          <ContainerError codeError={mutation.error?.response?.data.type} />
+        )}
         {mutation.isLoading && (
           <Flex width="100%" justifyContent="center">
             <PulseLoader />

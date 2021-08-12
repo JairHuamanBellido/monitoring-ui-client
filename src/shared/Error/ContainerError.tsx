@@ -1,6 +1,9 @@
+import { HttpErrorMessageUIAdapter } from "core/adapter/HttpErrorMessageAdapter";
+import { HttpErrorType } from "core/enums/HttpErrorEnum";
 import Flex from "shared/Flex/Flex";
+import "./index.scss";
 interface IProps {
-  message: string;
+  codeError: HttpErrorType | undefined;
 }
 export default function ContainerError(props: IProps) {
   return (
@@ -11,7 +14,7 @@ export default function ContainerError(props: IProps) {
       margin="24px 0px"
       justifyContent="center"
     >
-      <p>{props.message}</p>
+      <p>{HttpErrorMessageUIAdapter.parse(props.codeError)}</p>
     </Flex>
   );
 }

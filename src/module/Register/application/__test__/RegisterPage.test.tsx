@@ -1,33 +1,28 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import {
   QueryClient,
   QueryClientProvider,
   UseMutationResult,
 } from "react-query";
-import LoginPage from "../LoginPage";
-import useAuthentication from "../hooks/useAuthentication";
-import { AuthenticationResponseUseCaseDto } from "module/Login/domain/usecase/dto/AuthenticationResponseUseCaseDto";
+import RegisterPage from "../RegisterPage";
+import useRegister from "../hooks/useRegister";
+import { WriteResourceUseCase } from "core/usecase/WriteResourceUseCase";
 import { HttpError } from "core/types/HttpError";
-import { HttpErrorType } from "core/enums/HttpErrorEnum";
-import { HttpErrorMessageUIAdapter } from "core/adapter/HttpErrorMessageAdapter";
-// Fix typescript types
-const mockUseAuthentication = useAuthentication as jest.Mock<
-  UseMutationResult<AuthenticationResponseUseCaseDto, HttpError, void, unknown>
+const mockUseRegister = useRegister as jest.Mock<
+  UseMutationResult<WriteResourceUseCase, HttpError, void, unknown>
 >;
 
-// Mock module
-jest.mock("../hooks/useAuthentication");
+jest.mock("../hooks/useRegister");
 
-describe("[Login Page]", () => {
+describe("[Register Page]", () => {
   const queryClient = new QueryClient();
 
   beforeEach(() => {
-    mockUseAuthentication.mockImplementation((val) => ({
-      ...val,
+    mockUseRegister.mockImplementation((args) => ({
+      ...args,
       isSuccess: false,
-      isLoading: false,
     }));
   });
 
@@ -35,52 +30,67 @@ describe("[Login Page]", () => {
     jest.clearAllMocks();
   });
 
-  it("Display inputs for authentication", () => {
-    const { container } = render(
+  it("Display Register title", () => {
+    const { container, getByText } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <LoginPage />
+          <RegisterPage />
         </BrowserRouter>
       </QueryClientProvider>
     );
-    expect(container.querySelectorAll("input")).toHaveLength(2);
+    expect(container.querySelectorAll("h2")).toHaveLength(1);
+    expect(getByText(/Regístrate/i)).toBeInTheDocument();
   });
 
   it("Contains a form element", () => {
     const { container } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <LoginPage />
+          <RegisterPage />
         </BrowserRouter>
       </QueryClientProvider>
     );
     expect(container.querySelectorAll("form")).toHaveLength(1);
   });
 
-  it("Display loading indicator when submit", () => {
-    mockUseAuthentication.mockImplementation((args) => ({
-      ...args,
-      isLoading: true,
-    }));
-    render(
+  it("Display 8 inputs", () => {
+    const { container } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <LoginPage />
+          <RegisterPage />
         </BrowserRouter>
       </QueryClientProvider>
     );
+    expect(container.querySelectorAll("input")).toHaveLength(8);
+  });
+
+  it("Display loading indicator when submit", () => {
+    mockUseRegister.mockImplementation((args) => ({
+      ...args,
+      isLoading: true,
+    }));
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <RegisterPage />
+        </BrowserRouter>
+      </QueryClientProvider>
+    );
+
     expect(screen.getByTestId("loader-pulse")).toBeInTheDocument();
   });
 
   it("Display submit button when not request", () => {
-    mockUseAuthentication.mockImplementation((args) => ({
+    mockUseRegister.mockImplementation((args) => ({
       ...args,
       isLoading: false,
     }));
+
     const { container } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <LoginPage />
+          <RegisterPage />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -88,32 +98,20 @@ describe("[Login Page]", () => {
     expect(container.querySelectorAll("button")).toHaveLength(1);
   });
 
-  it("Display error when credentials are incorrect", () => {
-    const error = {
-      code: 400,
-      message: "Account blocked",
-      type: HttpErrorType.INVALID_CREDENTIALS,
-    };
-
-    mockUseAuthentication.mockImplementation((args) => ({
+  it("Display a sucessfull component when submited", () => {
+    mockUseRegister.mockImplementation((args) => ({
       ...args,
-      isError: true, 
-      error: {
-        response: {
-          data: error,
-        },
-      },
+      isSuccess: true,
     }));
 
     const { getByText } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <LoginPage />
+          <RegisterPage />
         </BrowserRouter>
       </QueryClientProvider>
     );
 
-    const parseError = HttpErrorMessageUIAdapter.parse(error.type);
-    expect(getByText(new RegExp(parseError, "i"))).toBeInTheDocument();
+    expect(getByText(/éxito/i)).toBeInTheDocument();
   });
 });
