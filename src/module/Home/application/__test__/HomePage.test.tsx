@@ -3,6 +3,7 @@ import { render } from "@testing-library/react";
 import HomePage from "../HomePage";
 import useGuestUser from "../hooks/useGuestUser";
 import { User } from "module/Home/domain/entity/User";
+import { BrowserRouter } from "react-router-dom";
 
 // Fix Typescript types
 const mockUseGuestUser = useGuestUser as jest.Mock<any>;
@@ -24,11 +25,19 @@ describe("[Home Page]", () => {
   });
 
   it("Render without crashing", () => {
-    render(<HomePage />);
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
   });
 
   it("Display loading indicator", () => {
-    const { getByText } = render(<HomePage />);
+    const { getByText } = render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
     expect(getByText(/Cargando/i)).toBeInTheDocument();
   });
 
@@ -45,7 +54,11 @@ describe("[Home Page]", () => {
       data: user,
     }));
 
-    const { getByText, queryByText } = render(<HomePage />);
+    const { getByText, queryByText } = render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
 
     // Avoid to display loading indicator
     expect(queryByText(/Cargando/i)).toBeFalsy();

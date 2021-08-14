@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { Flex, useSocket } from "shared";
-import { ListenerBlockAccountUseCase } from "../domain/usecase/ListenerBlockAccountUseCase";
-import { JoinRoomUseCase } from "../domain/usecase/JoinRoomUseCase";
 import useGuestUser from "./hooks/useGuestUser";
 import "./index.scss";
+import { SubscribeAdminRequestConnectionStatusUseCase } from "../domain/usecase/SubscribeAdminRequestConnectionStatusUseCase";
+import { SubscribeBlockAccountNotificationUseCase } from "../domain/usecase/SubscribeBlockAccountNotificationUseCase";
+import { EmitJoinRoomUseCase } from "../domain/usecase/EmitJoinRoomUseCase";
+import { EmitLogoutUseCase } from "../domain/usecase/EmitLogoutUseCase";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
   const { data, isLoading, isError } = useGuestUser();
@@ -11,8 +14,15 @@ export default function HomePage() {
   const socket = useSocket("users-management");
   useEffect(() => {
     if (socket !== undefined) {
-      JoinRoomUseCase.join(socket);
-      ListenerBlockAccountUseCase.listen(socket, blockAccount);
+      EmitJoinRoomUseCase.execute(socket);
+      SubscribeBlockAccountNotificationUseCase.subscribe(socket, blockAccount);
+      SubscribeAdminRequestConnectionStatusUseCase.subscribe(socket);
+
+      return () => {
+        EmitLogoutUseCase.emit(socket);
+        SubscribeAdminRequestConnectionStatusUseCase.unsubscribe(socket);
+        SubscribeBlockAccountNotificationUseCase.unsubscribe(socket);
+      };
     }
   }, [socket]);
 
@@ -23,7 +33,6 @@ export default function HomePage() {
   const { avatar, name } = data || {};
   if (isLoading) return <p>Cargando...</p>;
   if (isError) return <p>Something go wrong</p>;
-  if (data === undefined) <p>undefined</p>
   return (
     <Flex
       width="100%"
@@ -37,6 +46,7 @@ export default function HomePage() {
       <h1>Bienvenido {name}</h1>
       {isBlocked && <p>bloquedo</p>}
       <p>Actualmente estas conectado a la plataforma</p>
+      <Link to="/login">Cerrar sesion</Link>
     </Flex>
   );
 }
